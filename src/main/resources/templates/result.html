@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result 界面</title>
+</head>
+<style>
+    body {text-align: center}
+    div {
+        margin-top: 50px;
+
+        }
+</style>
+<body>
+<p> 这是搜索完拥有结果后出现的界面 </p>
+
+   <div>
+       <label >
+
+           <form class="my_test" name="form" method="get" action="/orderByDistance">
+
+            1、按照距离排序：<input type="submit" value="Distance">
+               <label>
+                   <select name="select">
+                       <option value="bigger">递增</option>
+                       <option value="smaller">递减</option>
+                   </select>
+               </label>
+           </form>
+       </label>
+
+
+       <form name="form" method="get" action="/orderByPrice">
+           2、按照房租排序： <input type="submit" value="Price">
+           <label>
+               <select name="select">
+                   <option value="bigger">递增</option>
+                   <option value="smaller">递减</option>
+               </select>
+           </label>
+       </form>
+
+       <form name="form" method="get" action="/orderBySize">
+          3、 按照面积排序：<input type="submit" value="Size">
+           <label>
+               <select name="select">
+                   <option value="bigger">递增</option>
+                   <option value="smaller">递减</option>
+               </select>
+           </label>
+       </form>
+
+       <form name="form" method="get" action="/selectByShape">
+           <label>
+                  4、    按照户型搜索结果:
+               <select name="bedroom">
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+                   <option value="3">3</option>
+                   <option value="4">4</option>
+               </select>
+               室
+           </label>
+           <label>
+               <select name="livingroom">
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+                   <option value="3">3</option>
+                   <option value="4">4</option>
+               </select>
+               厅
+           </label>
+           <label>
+               <select name="bathroom">
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+               </select>
+               卫
+           </label>
+           <input type="submit" value="搜索">
+       </form>
+
+       <form action="/index.html">
+           返回搜索页面: <input type="submit" value="return">
+       </form>
+
+   </div>
+
+
+</body>
+</html>

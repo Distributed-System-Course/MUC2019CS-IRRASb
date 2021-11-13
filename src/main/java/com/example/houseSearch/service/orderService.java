@@ -13,5 +13,7 @@ public interface orderService {
 
     ArrayList<House> orderBySize(String flag, String destination, Date today);
 
-    ArrayList<House> searchByShape(String shape,String destination, Date today);
+//    ArrayList<House> searchByShape(String shape,String destination, Date today);
+//
+//    ArrayList<House> searchByPrice(int price,String destination, Date today);
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Result 界面</title>
+    <title>结果 界面</title>
 </head>
 <style>
     body {text-align: center}
@@ -78,6 +78,19 @@
                卫
            </label>
            <input type="submit" value="搜索">
+       </form>
+
+       <form method="get" action="/selectByPrice">
+           <label>
+           5、   价格在:<input type="number" name="price" >元/每月之内
+               <input type="submit" value="搜索">
+           </label>
+       </form>
+
+       <form method="get" action="/evaluate">
+           <label>
+               6、试试我们的智能推荐吧 <input type="submit" value="智能推荐">
+           </label>
        </form>
 
        <form action="/index.html">

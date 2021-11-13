@@ -45,10 +45,16 @@ public class orderServiceImpl implements orderService {
             return orderMapper.getOrderBySizeSmall(today, destination);
     }
 
-    @Override
-    public ArrayList<House> searchByShape(String shape,String destination, Date today) {
-        return orderMapper.getSearchByShape(shape,today, destination);
-    }
+//    @Override
+//    public ArrayList<House> searchByShape(String shape,String destination, Date today) {
+//        return orderMapper.getSearchByShape(shape,today, destination);
+//    }
+//
+//    @Override
+//    public ArrayList<House> searchByPrice(int price, String destination, Date today) {
+//
+//        return orderMapper.getSearchByPrice(price, today, destination);
+//    }
 
 
 }

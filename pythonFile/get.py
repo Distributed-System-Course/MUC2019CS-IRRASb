@@ -79,7 +79,7 @@ def getPlaceLon(place):
         place = "中央民族大学"  # 迫不得已
     urlStart = "https://apis.map.qq.com/ws/geocoder/v1/?address="
     url_p = urllib.parse.quote(place)
-    city = urllib.parse.quote("北京")
+    city = urllib.parse.quote("北京市")
     urlEnd = "&key=3HRBZ-5NUWK-65VJN-AARKC-QN6XJ-GDFDS"
 
     URL = ""

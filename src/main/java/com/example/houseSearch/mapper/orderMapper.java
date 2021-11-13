@@ -12,7 +12,6 @@ import java.util.ArrayList;
 @Mapper
 public interface orderMapper {
 
-  //  ArrayList<House> getOrderByPrice(String flag, String destination, Date today);
 
     ArrayList<House> getOrderByPriceBig(@Param("today") Date today, @Param("destination") String destination);
 
@@ -26,5 +25,7 @@ public interface orderMapper {
 
     ArrayList<House> getOrderBySizeBig( @Param("today")  Date today, @Param("destination")  String destination  );
 
-    ArrayList<House> getSearchByShape(@Param("shape") String shape ,@Param("today") Date today,@Param("destination") String destination);
+  //  ArrayList<House> getSearchByShape(@Param("shape") String shape ,@Param("today") Date today,@Param("destination") String destination);
+
+  //  ArrayList<House> getSearchByPrice(@Param("price") int price, @Param("today") Date today, @Param("destination")  String destination );
 }

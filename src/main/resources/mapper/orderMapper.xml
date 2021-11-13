@@ -39,8 +39,20 @@
         select * from house where Today = #{today} and Destination = #{destination} order by Size  DESC
     </select>
 
-    <select id="getSearchByShape" resultMap="house" >
-        select * from house where Today = #{today} and Destination = #{destination} and Shape = #{shape}
-    </select>
+<!--    <select id="getSearchByShape" resultMap="house" >-->
+<!--        select * from house where Today = #{today} and Destination = #{destination} and Shape = #{shape}-->
+<!--    </select>-->
+
+<!--    <select id="getSearchByPrice" resultMap="house" >-->
+<!--        select * from house where Today = #{today} and Destination = #{destination} and Price &lt;=  #{price} order by Price-->
+<!--    </select>-->
 
 </mapper>
+
+<!-- 一些转义写法
+ <  &lt;
+ <= &lt;=
+ > &gt;
+ >= &gt;=
+
+ -->

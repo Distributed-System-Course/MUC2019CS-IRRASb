@@ -5,6 +5,14 @@ spring:
     username: root
     password: 1780206379
     name: MyHouse
+  thymeleaf:
+    cache: false    # 是否开启缓存，默认为true
+    check-template: true   # 检查模板是否存在，默认为true
+    check-template-location: true  # 检查模板位置是否存在,默认为true
+    encoding: UTF-8 # 模板文件编码，默认UTF-8
+    prefix: classpath:/templates/ # 模板文件位置，默认
+    suffix: .html #模板后缀,默认
+    mode: HTML # 模板，默认
 
 server:
   port: 8880

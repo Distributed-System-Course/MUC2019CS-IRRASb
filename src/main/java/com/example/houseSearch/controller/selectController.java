@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Priority;
 import javax.annotation.Resource;
@@ -31,9 +32,9 @@ public class selectController {
     selectService  selectService;
 
 
-    @ResponseBody
+
     @RequestMapping(value = "/selectByPrice",method = RequestMethod.GET)
-    public String selectPrice( @ModelAttribute("price") int price){
+    public ModelAndView selectPrice( @ModelAttribute("price") int price){
 
 
         String destination = searchService.getWhere();
@@ -41,34 +42,25 @@ public class selectController {
 
         ArrayList<House> result = selectService.searchByPrice(price,destination,date);
 
+        ModelAndView mv = new ModelAndView();
+
+        mv.addObject("result",result);
+
+        mv.addObject("title","根据价格查询结果");
         if(result.isEmpty())
-            return "No suitable result!";
-        else {
-            StringBuilder ret = new StringBuilder("结果如下:" + "<br>");
+            mv.setViewName("empty");
+        else
+            mv.setViewName("order");
 
-            for(House house : result){
-
-                ret.append("房名: " ).append(house.getName()).append(" ");
-                ret.append("价格: ").append( house.getPrice() ).append(" 元/月").append(" <br>");
-                ret.append("面积: ").append( house.getSize()).append(" ㎡").append(" <br>");
-                ret.append("楼高：").append( house.getHeight()).append("层 <br>");
-                ret.append("户型: ").append( house.getShape()).append(" <br>");
-                ret.append("位置: ").append(house.getPosition()).append(" <br>");
-                ret.append("距离 ").append(house.getDestination()).append(" ").append(house.getDistance()).append("米<br>");
-                ret.append("------------------------------------<br>");
-
-            }
-            return ret.toString();
-
-        }
+        return  mv;
 
 
     }
 
 
-    @ResponseBody
+
     @RequestMapping(value = "/selectByShape",method = RequestMethod.GET)
-    public String searchShape(@ModelAttribute("bedroom") String bedroom,@ModelAttribute("livingroom") String livingroom,@ModelAttribute("bathroom") String bathroom){
+    public ModelAndView searchShape(@ModelAttribute("bedroom") String bedroom,@ModelAttribute("livingroom") String livingroom,@ModelAttribute("bathroom") String bathroom){
 
 
         String destination = searchService.getWhere();
@@ -78,38 +70,31 @@ public class selectController {
 
         ArrayList<House> result = selectService.searchByShape(shape,destination,date);
 
+        ModelAndView mv = new ModelAndView();
+
+        mv.addObject("result",result);
+
+        mv.addObject("title","根据房型查询结果");
+
         if(result.isEmpty())
-            return "No suitable result!";
-        else {
-            StringBuilder ret = new StringBuilder("结果如下:" + "<br>");
+            mv.setViewName("empty");
+        else
+            mv.setViewName("order");
 
-            for(House house : result){
-
-                ret.append("房名: " ).append(house.getName()).append(" ");
-                ret.append("价格: ").append( house.getPrice() ).append(" 元/月").append(" <br>");
-                ret.append("面积: ").append( house.getSize()).append(" ㎡").append(" <br>");
-                ret.append("楼高：").append( house.getHeight()).append("层 <br>");
-                ret.append("户型: ").append( house.getShape()).append(" <br>");
-                ret.append("位置: ").append(house.getPosition()).append(" <br>");
-                ret.append("距离 ").append(house.getDestination()).append(" ").append(house.getDistance()).append("米<br>");
-                ret.append("------------------------------------<br>");
-
-            }
-            return ret.toString();
-
-        }
+       return mv;
 
     }
 
-    @ResponseBody
     @RequestMapping(value = "/evaluate",method = RequestMethod.GET)
-    public String evaluateHouse(){
+    public ModelAndView evaluateHouse(){
 
         String destination = searchService.getWhere();
         Date date = searchService.getDate();
 
         // 拿到此次搜索出的所有数据,输入
         ArrayList<House> this_all = selectService.getThisAll(date,destination);
+
+
 
         float[][] input = new float[this_all.size()][3];
 
@@ -209,7 +194,15 @@ public class selectController {
         }
 
 
-        StringBuilder ret = new StringBuilder("结果如下:" + "<br>");
+        ModelAndView mv = new ModelAndView();
+
+
+
+       ArrayList<House> result = new ArrayList<>();
+
+       ArrayList<Float> Poss = new ArrayList<>();
+
+       ArrayList<String> star = new ArrayList<>();
 
 
 
@@ -217,30 +210,38 @@ public class selectController {
             float[] pair = priorityQueue.poll();
 
             int i= (int) pair[0];
-            ret.append("房名: " ).append(this_all.get(i).getName()).append(" ");
-            ret.append("价格: ").append( this_all.get(i).getPrice() ).append(" 元/月").append(" <br>");
-            ret.append("面积: ").append( this_all.get(i).getSize()).append(" ㎡").append(" <br>");
-            ret.append("楼高：").append( this_all.get(i).getHeight()).append("层 <br>");
-            ret.append("户型: ").append( this_all.get(i).getShape()).append(" <br>");
-            ret.append("位置: ").append(this_all.get(i).getPosition()).append(" <br>");
-            ret.append("距离 ").append(this_all.get(i).getDestination()).append(" ").append(this_all.get(i).getDistance()).append("米<br>");
-            if(pair[1] >= 0.8 )
-                ret.append("5星推荐!<br> ");
-            else if( pair[1] >= 0.6 && pair[1] < 0.8)
-                ret.append("4星推荐！<br>");
-            else if( pair[1] >= 0.4 && pair[1] <0.6)
-                ret.append("3星推荐！<br>");
-            else if( pair[1] >= 0.2 && pair[1] < 0.4)
-                ret.append("2星推荐！<br>");
-            else
-                ret.append("1星推荐！<br>");
 
-            ret.append("------------------------------------<br>");
+            result.add(this_all.get(i));
+
+            Poss.add(pair[1]);
+
+            if(pair[1] >= 0.8 )
+                star.add("5星推荐！");
+            else if( pair[1] >= 0.6 && pair[1] < 0.8)
+                star.add("4星推荐！");
+            else if( pair[1] >= 0.4 && pair[1] <0.6)
+                star.add("3星推荐！");
+            else if( pair[1] >= 0.2 && pair[1] < 0.4)
+                star.add("2星推荐！");
+            else
+               star.add("1星推荐！");
+
+
         }
 
+        mv.addObject("result",result);
+
+        mv.addObject("Poss",Poss);
+
+        mv.addObject("star",star);
+
+        mv.setViewName("evaluate");
+
+        return mv;
 
 
-        return ret.toString();
+
+
 
     }
 

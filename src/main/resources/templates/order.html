@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">结果</title>
+</head>
+
+
+
+<body>
+
+<h1> 结果如下：</h1>
+
+
+<table id="houses">
+
+</table>
+
+<script th:inline="javascript">
+
+  const result =  /*[[${result}]]*/{};
+
+
+  const  tableHeaders = " <tr>  <th> 名称 </th> <th> 价格 (元/月) </th> <th> 面积 (㎡)</th> <th> 楼高 (层)</th>" +
+          " <th>户型 </th> <th> 位置 </th>  <th> 距离 (米) </th> </tr>";
+
+  let houseHTML ="";
+
+  houseHTML += tableHeaders;
+
+  const houseRow = " <tr>  <td> NAME </td> <td> PRICE </td> <td> SIZE </td> <td> HEIGHT </td>  <td> SHAPE </td>" +
+          " <td> POSITION </td> <td> DISTANCE </td> </tr>";
+
+  function getReplace(house) {
+
+    let thisHouseHTML = houseRow;
+
+    thisHouseHTML = thisHouseHTML.replace("NAME",house.name);
+    thisHouseHTML = thisHouseHTML.replace("PRICE",house.price);
+    thisHouseHTML = thisHouseHTML.replace("SIZE",house.size);
+    thisHouseHTML = thisHouseHTML.replace("HEIGHT",house.height);
+    thisHouseHTML = thisHouseHTML.replace("SHAPE",house.shape);
+    thisHouseHTML = thisHouseHTML.replace("POSITION",house.position);
+    thisHouseHTML = thisHouseHTML.replace("DISTANCE",house.distance);
+
+    houseHTML += thisHouseHTML;
+      
+  }
+
+  function load() {
+
+      for(let i=0;i<result.length;i++){
+          getReplace(result[i]);
+
+      }
+
+   document.getElementById("houses").innerHTML = houseHTML;
+      
+  }
+
+  load();
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

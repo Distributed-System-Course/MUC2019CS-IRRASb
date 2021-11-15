@@ -6,7 +6,7 @@ import java.sql.Date;
 
 public interface searchService {
 
-    void search(String where);
+    void search(String where,String city);
 
     String getWhere();
 

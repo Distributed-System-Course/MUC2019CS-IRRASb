@@ -9,6 +9,10 @@ import urllib
 import datetime
 from pymysql import *
 
+city_dict = {'dongcheng': '东城区', 'xicheng': '西城区', 'chaoyang': '朝阳区', 'haidian': '海淀区', 'fengtai': '丰台区',
+             'shijingshan': '石景山区', 'tongzhou': '通州区', 'changping': '昌平区', 'daxing': '大兴区', 'shunyi': '顺义区',
+             'fangshan': '房山区', 'pinggu': '平谷区', 'huairou': '怀柔区', 'miyun': '密云区', 'yanqing': '延庆区'}
+
 
 # 价格
 def getPrice(data, price):
@@ -68,25 +72,36 @@ def getShape(data, shape):
     for div in data:
         temp_str = str(div.find("p", class_="content__list--item--des"))
         temp = re.findall(r'\d+室\d+厅\d+卫', temp_str)
-        if temp is None:
-            temp = ''
         shape.extend(temp)
 
 
 # 得到查询地点的经纬度
-def getPlaceLon(place):
+def getPlaceLon(place, city):
     if place == "民族大学":
         place = "中央民族大学"  # 迫不得已
-    urlStart = "https://apis.map.qq.com/ws/geocoder/v1/?address="
-    url_p = urllib.parse.quote(place)
-    city = urllib.parse.quote("北京市")
-    urlEnd = "&key=3HRBZ-5NUWK-65VJN-AARKC-QN6XJ-GDFDS"
+    if city == '':
+        urlStart = "https://apis.map.qq.com/ws/geocoder/v1/?address="
+        url_p = urllib.parse.quote("北京市" + place)
+        # city = urllib.parse.quote("北京市")
+        urlEnd = "&key=3HRBZ-5NUWK-65VJN-AARKC-QN6XJ-GDFDS"
 
-    URL = ""
-    URL += urlStart
-    URL += url_p
-    URL += "region=" + city
-    URL += urlEnd
+        URL = ""
+        URL += urlStart
+        URL += url_p
+        # URL += "region=" + city
+        URL += urlEnd
+    else:
+        urlStart = "https://apis.map.qq.com/ws/geocoder/v1/?address="
+        url_p = urllib.parse.quote("北京市" + city_dict[city] + place)
+        # city = urllib.parse.quote("北京市")
+        urlEnd = "&key=3HRBZ-5NUWK-65VJN-AARKC-QN6XJ-GDFDS"
+
+        URL = ""
+        URL += urlStart
+        URL += url_p
+        # URL += "region=" + city
+        URL += urlEnd
+
     result = urllib.request.urlopen(URL)
 
     data = json.loads(result.read())
@@ -117,6 +132,7 @@ def getLongitudeAndLat(position, location):
 
         data = json.loads(result.read())
 
+
         # print(data)
 
         dic = dict()
@@ -132,8 +148,8 @@ def getLongitudeAndLat(position, location):
         # print(type(data))
 
 
-def getDistance(location, place, distance):
-    placeLoc = getPlaceLon(place)
+def getDistance(location, place, distance, city=''):
+    placeLoc = getPlaceLon(place, city)
     # for loc in location:
     urlStart = "https://apis.map.qq.com/ws/distance/v1/matrix/?mode=walking&"
     urlEnd = "&key=3HRBZ-5NUWK-65VJN-AARKC-QN6XJ-GDFDS"
@@ -150,6 +166,8 @@ def getDistance(location, place, distance):
         result = urllib.request.urlopen(url)
         data = json.loads(result.read())
 
+
+
         # print(data)
         distance.append(data['result']['rows'][0]['elements'][0]['distance'])
         time.sleep(0.5)  # 每秒有上限
@@ -162,8 +180,6 @@ def connectDataBase(name, position, high, size, shape, price, distance, thisTime
     cur = con.cursor()
     # insert into house values('整租·民族大学家属院 2室1厅 南/北',9500,14,'海淀魏公村民族大学家属院',62.17,'2室1厅1卫','民族大学',905,'2021-10-29');
     for i in range(len(name)):
-        if shape[i] == '':
-            continue
         sql = "insert into house values(%(name)s,%(price)s,%(high)s,%(position)s,%(size)s,%(shape)s,%(destination)s,%(distance)s,%(day)s);"
         values = {"name": name[i], "price": price[i], "high": high[i], "position": position[i], "size": size[i],
                   "shape": shape[i], "destination": place
@@ -174,62 +190,67 @@ def connectDataBase(name, position, high, size, shape, price, distance, thisTime
     print("添加数据完成")
 
 
-def main(place):
-    url = "https://bj.lianjia.com/zufang/rs"
+def main(place, city=''):
+    url = "https://bj.lianjia.com/zufang"
+
+    if city != '':
+        url += ('/' + city)
+
+    url += '/rs'
 
     # 对汉语进行编码
     url += urllib.parse.quote(place)
     html = urllib.request.urlopen(url, timeout=30)
     soup = BeautifulSoup(html.read().decode('utf-8'), "lxml")
-    # print(soup)
+
     data1 = soup.find("div", class_="content__list")
     data = data1.find_all("div", class_="content__list--item--main")  # 返回满足条件的【所有】结果，通常用它
     # print(data)
 
     name = list()
     getName(data, name)
-    # print("姓名：", name)
+    print("姓名：", name)
 
     position = list()
     getPosition(data, position)
-    # print("位置：", position)
+    print("位置：", position)
 
     high = list()
     getHigh(data, high)
-    # print("楼层:", high)
+    print("楼层:", high)
 
     size = list()
     getSize(data, size)
-    # print("面积：", size)
+    print("面积：", size)
 
     shape = list()
     getShape(data, shape)
-    # print("户型：", shape)
+    print("户型：", shape)
 
     price = list()
     getPrice(data, price)
-    # print("价格：", price)
+    print("价格：", price)
 
     location = list()
     getLongitudeAndLat(position, location)  # 经纬度
     #
     distance = list()
-    getDistance(location, place, distance)
+    getDistance(location, place, distance, city=city)
 
-    # print('距离：', distance)
+    print('距离：', distance)
 
     thisTime = datetime.date.today()
 
-    # print("当前时间", thisTime)
-    #
-    connectDataBase(name, position, high, size, shape, price, distance, thisTime, place)
+    print("当前时间", thisTime)
 
-    return
+    connectDataBase(name, position, high, size, shape, price, distance, thisTime, place)
 
 
 if __name__ == '__main__':
     # for i in range(1, len(sys.argv)):
     #     place = sys.argv[i]
     #     main(place)
-    place = sys.argv[len(sys.argv) - 1]
-    main(place)
+    get_sys = sys.argv[len(sys.argv) - 1]
+    sys_res = get_sys.split('+')
+
+    main(place=sys_res[0], city=sys_res[1])

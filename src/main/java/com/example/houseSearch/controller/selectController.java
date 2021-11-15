@@ -128,10 +128,10 @@ public class selectController {
 
 
             // 计算平均价格/面积
-            int avg_price = 0 , sum_price_size=0;
+            float avg_price = 0 , sum_price_size=0;
 
             if(odd.isEmpty())
-                avg_price = (int) input[i][0];
+                avg_price =  input[i][0];
 
              else {
                 for (House house : odd)

@@ -17,10 +17,19 @@ public class searchController {
     searchServiceImpl service ;
 
     @RequestMapping(value = "/search",method = RequestMethod.POST)
-    public String searchMethod( @ModelAttribute("search") String where){
+    public String searchMethod( @ModelAttribute("search") String where, @ModelAttribute("select") String city){
+
+//       StringBuilder S =new StringBuilder("");
+//
+//       S.append(where);
+//       S.append("+");
+//       if (city.equals("nothing")){
+//       }else S.append(city);
 
 
-       service.search(where);
+
+       service.search(where,city);
+
         return "result";
 
     }

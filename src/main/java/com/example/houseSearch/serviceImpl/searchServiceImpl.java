@@ -30,15 +30,18 @@ public class searchServiceImpl implements searchService {
 
 
     @Override
-    public void search(String where) {
+    public void search(String where,String city) {
 
         this.now = where;
         this.today = new Date( new java.util.Date().getTime());
 
+        StringBuilder rs = new StringBuilder("");
+        rs.append(where).append("+");
+        if(!city.equals("nothing")) rs.append(city);
 
         if( !this.visited.contains(where)){
 
-            String[] arg = new String[]{"python","D:\\HouseSearch\\pythonFile\\get.py",where};
+            String[] arg = new String[]{"python","D:\\HouseSearch\\pythonFile\\get.py",rs.toString()};
 
         //     调用python程序
             try {

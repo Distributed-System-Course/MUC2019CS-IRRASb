@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}">结果</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 </head>
 
+<script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=3HRBZ-5NUWK-65VJN-AARKC-QN6XJ-GDFDS" ></script>
+<style type="text/css">
 
+    #container {
+        width: 50%;
+        height: 50%;
+    }
+</style>
 
 <body>
 
@@ -61,6 +70,50 @@
   load();
 
 
+
+</script>
+
+<div id="container">
+    <input type="button" onclick="load()" value="加载地图">
+</div>
+
+<script type="text/javascript">
+
+     // 修改地图中心，传入位置数据
+
+    function load() {
+        // 初始化地图
+        var map = new TMap.Map('container', {
+            zoom: 15, // 设置地图缩放
+            center: new TMap.LatLng(39.950771, 116.320549), // 设置地图中心点坐标，
+            //      pitch: 100, // 俯仰度
+            //     rotation: 200, // 旋转角度
+        });
+
+        // MultiMarker文档地址：https://lbs.qq.com/webApi/javascriptGL/glDoc/glDocMarker
+        var marker = new TMap.MultiMarker({
+            map: map,
+            styles: {
+                // 点标记样式
+                marker: new TMap.MarkerStyle({
+                    width: 20, // 样式宽
+                    height: 30, // 样式高
+                    anchor: { x: 10, y: 30 }, // 描点位置
+                    src: 'https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/markerDefault.png', // 标记路径
+                }),
+            },
+            geometries: [
+                // 点标记数据数组
+                {
+                    // 标记位置(经度，纬度，高度)
+                    position: new TMap.LatLng(39.94616, 116.31622),
+                },
+                {
+                    position : new TMap.LatLng(39.95158,116.314217),
+                },
+            ],
+        });
+    }
 
 </script>
 

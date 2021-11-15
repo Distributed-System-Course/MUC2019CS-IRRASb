@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>结果 界面</title>
+    <title>功能</title>
 </head>
 <style>
     body {text-align: center}
@@ -12,22 +12,22 @@
         }
 </style>
 <body>
-<p> 这是搜索完拥有结果后出现的界面 </p>
+
 
    <div>
-       <label >
+
 
            <form class="my_test" name="form" method="get" action="/orderByDistance">
-
-            1、按照距离排序：<input type="submit" value="Distance">
                <label>
+              1、按照距离排序：<input type="submit" value="Distance">
+
                    <select name="select">
                        <option value="bigger">递增</option>
                        <option value="smaller">递减</option>
                    </select>
                </label>
            </form>
-       </label>
+
 
 
        <form name="form" method="get" action="/orderByPrice">
@@ -93,7 +93,7 @@
            </label>
        </form>
 
-       <form action="/index.html">
+       <form action="search.html"> <!-- 返回业面-->
            返回搜索页面: <input type="submit" value="return">
        </form>
 

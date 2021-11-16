@@ -27,4 +27,11 @@ public class loginServiceImpl implements loginService {
         }
         return false;
     }
+
+    @Override
+    public void insertUser(String name, String password) {
+
+        this.selectUserMapper.insertUser(name, password);
+
+    }
 }

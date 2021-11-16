@@ -1,6 +1,7 @@
 package com.example.houseSearch.controller;
 
 import com.example.houseSearch.bean.House;
+import com.example.houseSearch.bean.LongLat;
 import com.example.houseSearch.service.orderService;
 import com.example.houseSearch.service.searchService;
 import com.example.houseSearch.serviceImpl.orderServiceImpl;
@@ -38,10 +39,14 @@ public class orderController {
 
 
         ArrayList<House> result = orderService.orderByPrice(flag,destination,date);
+        ArrayList<LongLat> map = orderService.getAll();
 
 
         ModelAndView mv = new ModelAndView();
         mv.addObject("result",result);
+        mv.addObject("map",map);
+        mv.addObject("place",destination);
+
         mv.addObject("title","按照价格排序结果");
         mv.setViewName("order");
 
@@ -60,11 +65,14 @@ public class orderController {
 
 
         ArrayList<House> result = orderService.orderByDistance(flag,destination,date);
+        ArrayList<LongLat> map = orderService.getAll();
 
 
 
         ModelAndView mv = new ModelAndView();
         mv.addObject("result",result);
+        mv.addObject("map",map);
+        mv.addObject("place",destination);
         mv.addObject("title","按照距离排序结果");
         mv.setViewName("order");
         return mv;
@@ -82,9 +90,12 @@ public class orderController {
 
 
         ArrayList<House> result = orderService.orderBySize(flag,destination,date);
+        ArrayList<LongLat> map = orderService.getAll();
 
         ModelAndView mv = new ModelAndView();
         mv.addObject("result",result);
+        mv.addObject("map",map);
+        mv.addObject("place",destination);
         mv.addObject("title","按照面积排序结果");
         mv.setViewName("order");
 

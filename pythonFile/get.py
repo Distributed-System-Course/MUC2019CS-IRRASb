@@ -132,7 +132,6 @@ def getLongitudeAndLat(position, location):
 
         data = json.loads(result.read())
 
-
         # print(data)
 
         dic = dict()
@@ -166,8 +165,6 @@ def getDistance(location, place, distance, city=''):
         result = urllib.request.urlopen(url)
         data = json.loads(result.read())
 
-
-
         # print(data)
         distance.append(data['result']['rows'][0]['elements'][0]['distance'])
         time.sleep(0.5)  # 每秒有上限
@@ -180,14 +177,34 @@ def connectDataBase(name, position, high, size, shape, price, distance, thisTime
     cur = con.cursor()
     # insert into house values('整租·民族大学家属院 2室1厅 南/北',9500,14,'海淀魏公村民族大学家属院',62.17,'2室1厅1卫','民族大学',905,'2021-10-29');
     for i in range(len(name)):
-        sql = "insert into house values(%(name)s,%(price)s,%(high)s,%(position)s,%(size)s,%(shape)s,%(destination)s,%(distance)s,%(day)s);"
-        values = {"name": name[i], "price": price[i], "high": high[i], "position": position[i], "size": size[i],
-                  "shape": shape[i], "destination": place
-            , "distance": distance[i], "day": str(thisTime)}
-        cur.execute(sql, values)
-        con.commit()
+        try:
+            sql = "insert into house values(%(name)s,%(price)s,%(high)s,%(position)s,%(size)s,%(shape)s,%(destination)s,%(distance)s,%(day)s);"
+            values = {"name": name[i], "price": price[i], "high": high[i], "position": position[i], "size": size[i],
+                      "shape": shape[i], "destination": place
+                , "distance": distance[i], "day": str(thisTime)}
+            cur.execute(sql, values)
+            con.commit()
+        except:
+            pass
+
     con.close()
     print("添加数据完成")
+
+
+def connectL(Lat_Lng):
+    con = connect(host='localhost', port=3306, user='root', passwd='1780206379', database='JavaWork')
+    cur = con.cursor()
+
+    for lo in Lat_Lng.keys():
+        try:
+            sql = "insert into Location values (%(po)s,%(Lat)s,%(Lng)s);"
+            values = {'po': lo, "Lat": Lat_Lng[lo]['lat'], "Lng": Lat_Lng[lo]['lng']}
+            cur.execute(sql, values)
+            con.commit()
+        except:
+            pass
+
+    con.close()
 
 
 def main(place, city=''):
@@ -209,27 +226,27 @@ def main(place, city=''):
 
     name = list()
     getName(data, name)
-    print("姓名：", name)
+    # print("姓名：", name)
 
     position = list()
     getPosition(data, position)
-    print("位置：", position)
+    # print("位置：", position)
 
     high = list()
     getHigh(data, high)
-    print("楼层:", high)
+    # print("楼层:", high)
 
     size = list()
     getSize(data, size)
-    print("面积：", size)
+    # print("面积：", size)
 
     shape = list()
     getShape(data, shape)
-    print("户型：", shape)
+    # print("户型：", shape)
 
     price = list()
     getPrice(data, price)
-    print("价格：", price)
+    # print("价格：", price)
 
     location = list()
     getLongitudeAndLat(position, location)  # 经纬度
@@ -237,11 +254,22 @@ def main(place, city=''):
     distance = list()
     getDistance(location, place, distance, city=city)
 
-    print('距离：', distance)
+    Lat_Lng = dict()
+    for i in range(len(position)):
+        if position[i] not in Lat_Lng.keys():
+            Lat_Lng[position[i]] = location[i]
+
+    placeLoc = getPlaceLon(place, city)
+    if place not in Lat_Lng.keys():
+        Lat_Lng[place] = {'lng': placeLoc[0], 'lat': placeLoc[1]}
+
+    # print('距离：', distance)
 
     thisTime = datetime.date.today()
 
-    print("当前时间", thisTime)
+    # print("当前时间", thisTime)
+
+    connectL(Lat_Lng)
 
     connectDataBase(name, position, high, size, shape, price, distance, thisTime, place)
 

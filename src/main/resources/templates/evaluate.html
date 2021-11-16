@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>系统的评估结果</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 </head>
+<script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=3HRBZ-5NUWK-65VJN-AARKC-QN6XJ-GDFDS" ></script>
+<style type="text/css">
+
+    #container {
+        width: 70%;
+        height: 70%;
+    }
+</style>
+
 <body>
 <h1> 结果如下：</h1>
 
@@ -11,11 +22,20 @@
 <table id="houses">
 </table>
 
+<div id="container">
+    <input type="button" onclick="loadMap()" value="加载地图">
+</div>
+
+
 <script th:inline="javascript">
 
     const result =  /*[[${result}]]*/{};
     const Poss =  /*[[${Poss}]]*/{};
     const stars =  /*[[${star}]]*/{};
+
+    const myMap =/*[[${map}]]*/{};
+
+    const myPlace = /*[[${place}]]*/{};
 
 
     const  tableHeaders = " <tr>  <th> 名称 </th> <th> 价格 (元/月) </th> <th> 面积 (㎡)</th> <th> 楼高 (层)</th>" +
@@ -54,6 +74,61 @@
         }
 
         document.getElementById("houses").innerHTML = houseHTML;
+
+    }
+
+
+    function loadMap() {
+
+        let c_lat=39.950771;
+        let c_lng=116.320549;
+
+        for (let i = 0; i < myMap.length; i++) {
+            console.log(myMap[i].position);
+            console.log(myPlace);
+            if( myMap[i].position === myPlace){
+                c_lat = myMap[i].lat;
+                c_lng = myMap[i].lng;
+
+            }
+        }
+        // 初始化地图
+        console.log(c_lat);
+        console.log(c_lng);
+        var map = new TMap.Map('container', {
+            zoom: 11, // 设置地图缩放
+            center: new TMap.LatLng(c_lat, c_lng), // 设置地图中心点坐标，
+            //      pitch: 100, // 俯仰度
+            //     rotation: 200, // 旋转角度
+        });
+
+        // MultiMarker文档地址：https://lbs.qq.com/webApi/javascriptGL/glDoc/glDocMarker
+        var markerLayer = new TMap.MultiMarker({
+            map: map,
+            styles: {
+                // 点标记样式
+                marker: new TMap.MarkerStyle({
+                    width: 20, // 样式宽
+                    height: 30, // 样式高
+                    anchor: { x: 10, y: 30 }, // 描点位置
+                    src: 'https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/markerDefault.png', // 标记路径
+                }),
+            },
+
+        });
+
+        for (let i = 0; i < result.length; i++) {
+            let L_x = 39.94616;
+            let L_y = 116.31622;
+            for (let j = 0; j < myMap.length; j++) {
+                if( result[i].position === myMap[j].position ){
+                    L_x = myMap[j].lat;
+                    L_y = myMap[j].lng;
+                }
+            }
+            markerLayer.add([{position:new TMap.LatLng(L_x,L_y)}]);
+        }
+
 
     }
 

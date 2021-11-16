@@ -19,14 +19,21 @@ public class searchController {
     @RequestMapping(value = "/search",method = RequestMethod.POST)
     public String searchMethod( @ModelAttribute("search") String where, @ModelAttribute("select") String city){
 
-
-
-
-
        service.search(where,city);
 
         return "result";
 
+    }
+
+    @RequestMapping("/back")
+    public String goBack(){
+
+        return "search";
+    }
+
+    @RequestMapping("/goIndex")
+    public String goIndex(){
+        return "index_";
     }
 
 

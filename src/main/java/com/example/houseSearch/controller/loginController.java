@@ -30,23 +30,34 @@ public class loginController {
 
     }
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("name") String name,@ModelAttribute("password") String password,@ModelAttribute("tehPassword") String thePassword){
+    public ModelAndView register(@ModelAttribute("username") String name,@ModelAttribute("password") String password,@ModelAttribute("thePassword") String thePassword){
 
         ModelAndView mv = new ModelAndView();
+
+        System.out.println(password);
+        System.out.println(thePassword);
 
         if( !password.equals(thePassword)){
             mv.addObject("err","两次密码不一致！");
             mv.setViewName("register");
         }else {
 
+            loginService.insertUser(name, password);
+
             mv.setViewName("search");
         }
 
 
-
-
         return mv;
     }
+
+    @RequestMapping("/goRegister")
+    public String goRegister(){
+
+        return "register";
+
+    }
+
 
 
 }

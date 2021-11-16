@@ -2,6 +2,7 @@ package com.example.houseSearch.controller;
 
 
 import com.example.houseSearch.bean.House;
+import com.example.houseSearch.bean.LongLat;
 import com.example.houseSearch.service.orderService;
 import com.example.houseSearch.service.searchService;
 import com.example.houseSearch.service.selectService;
@@ -31,6 +32,9 @@ public class selectController {
     @Resource
     selectService  selectService;
 
+    @Resource
+    orderService orderService;
+
 
 
     @RequestMapping(value = "/selectByPrice",method = RequestMethod.GET)
@@ -41,10 +45,14 @@ public class selectController {
         Date date = searchService.getDate();
 
         ArrayList<House> result = selectService.searchByPrice(price,destination,date);
+        ArrayList<LongLat> map = orderService.getAll();
 
         ModelAndView mv = new ModelAndView();
 
+
         mv.addObject("result",result);
+        mv.addObject("map",map);
+        mv.addObject("place",destination);
 
         mv.addObject("title","根据价格查询结果");
         if(result.isEmpty())
@@ -69,10 +77,13 @@ public class selectController {
         String shape = bedroom + "室" + livingroom +"厅"+ bathroom +"卫";
 
         ArrayList<House> result = selectService.searchByShape(shape,destination,date);
+        ArrayList<LongLat> map = orderService.getAll();
 
         ModelAndView mv = new ModelAndView();
 
         mv.addObject("result",result);
+        mv.addObject("map",map);
+        mv.addObject("place",destination);
 
         mv.addObject("title","根据房型查询结果");
 
@@ -228,6 +239,10 @@ public class selectController {
 
 
         }
+        ArrayList<LongLat> map = orderService.getAll();
+
+        mv.addObject("map",map);
+        mv.addObject("place",destination);
 
         mv.addObject("result",result);
 

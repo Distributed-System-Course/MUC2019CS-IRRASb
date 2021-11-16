@@ -1,6 +1,8 @@
 package com.example.houseSearch.serviceImpl;
 
 import com.example.houseSearch.bean.House;
+import com.example.houseSearch.bean.LongLat;
+import com.example.houseSearch.mapper.LongLatMapper;
 import com.example.houseSearch.mapper.orderMapper;
 import com.example.houseSearch.service.orderService;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,11 @@ public class orderServiceImpl implements orderService {
 
     @Resource
     orderMapper orderMapper;
+
+    @Resource
+    LongLatMapper longLatMapper;
+
+
 
     @Override
     public ArrayList<House> orderByPrice(String flag, String destination, Date today) {
@@ -43,6 +50,11 @@ public class orderServiceImpl implements orderService {
             return orderMapper.getOrderBySizeBig(today, destination);
         else
             return orderMapper.getOrderBySizeSmall(today, destination);
+    }
+
+    @Override
+    public ArrayList<LongLat> getAll() {
+        return longLatMapper.getAll();
     }
 
 //    @Override
